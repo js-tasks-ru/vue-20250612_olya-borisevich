@@ -8,9 +8,18 @@
     <div class="wrapper">
       <div class="container">
         <h1>Calculator</h1>
-        <div id="app"></div>
+        <div id="app">
+          <CalculatorApp />
+        </div>
       </div>
     </div>
     <script type="module" src="./main.js"></script>
+    <script>
+      import CalculatorApp from 'CalculatorApp.vue'
+
+      export default {
+        components: { CalculatorApp }
+      }
+  </script>
   </body>
 </html>
