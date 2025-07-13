@@ -36,25 +36,18 @@ export default defineComponent({
     const items = ref(emails)
     const search = ref('')
 
-    const filteredItems = computed(() => {
-      if (search.value) {
-        return items.value.filter(item =>
-          item.toLowerCase().includes(search.value.toLowerCase())
-        )
-      }
-      return items.value
+    const preparedItems = computed(() => {
+      const query = search.value.trim().toLowerCase()
+
+      return items.value.map(email => ({
+        email,
+        isMarked: query !== '' && email.toLowerCase().includes(query)
+      }))
     })
 
-    const isMarked = item => {
-      if (!search.value) return false
-      return item.toLowerCase().includes(search.value.toLowerCase())
-    }
-
     return {
-      items,
       search,
-      filteredItems,
-      isMarked,
+      preparedItems,
     }
   },
 
@@ -65,11 +58,11 @@ export default defineComponent({
       </div>
       <ul aria-label="Emails">
         <li
-          v-for="(item, index) in items"
-          :key="index"
-          :class="{marked: isMarked(item)}"
+          v-for="item in preparedItems"
+          :key="item.email"
+          :class="{ marked: item.isMarked }"
           >
-          {{ item }}
+          {{ item.email }}
         </li>
       </ul>
     </div>
