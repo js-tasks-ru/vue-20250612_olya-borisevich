@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue'
 
 const props = defineProps({
   title: {
@@ -10,12 +9,14 @@ const props = defineProps({
     type: String,
   },
 })
-
-const bgStyle = computed(() => (props.image ? { '--bg-url': `url('${props.image}')` } : undefined))
 </script>
 
 <template>
-  <div class="meetup-cover" :style="bgStyle">
+  <div class="meetup-cover"
+    :style="{
+        '--bg-url': props.image ? `url('${props.image}')` : 'var(--default-cover)',
+      }"
+  >
     <h1 class="meetup-cover__title">{{ title }}</h1>
   </div>
 </template>
@@ -24,9 +25,8 @@ const bgStyle = computed(() => (props.image ? { '--bg-url': `url('${props.image}
 .meetup-cover {
   background-size: cover;
   background-position: center;
-  /* Если изображение присутствует - берём его из CSS переменной, установленной на элемент в шаблоне */
-  /* Иначе выводим изображение по умолчанию - var(--default-cover) */
-  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--bg-url, var(--default-cover));
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    v-bind(--bg-url);
   display: flex;
   flex-direction: column;
   align-items: center;
