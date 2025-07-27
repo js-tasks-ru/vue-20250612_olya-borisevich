@@ -1,25 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { UiIcon } from '@shgk/vue-course-ui'
 
-const props = defineProps({
-  organizer: {
-    type: String,
-    required: true,
-  },
+interface MeetupInfoProps {
+  organizer: string
+  place: string
+  date: number
+}
 
-  place: {
-    type: String,
-    required: true,
-  },
+const props = defineProps<MeetupInfoProps>()
 
-  date: {
-    type: Number,
-    required: true,
-  },
-})
+const isoDate = computed(() =>
+  new Date(props.date).toISOString().slice(0, 10),
+)
 
-const isoDate = computed(() => new Date(props.date).toISOString().slice(0, 10))
 const localDate = computed(() =>
   new Date(props.date).toLocaleString(navigator.language, {
     year: 'numeric',
@@ -33,11 +27,11 @@ const localDate = computed(() =>
   <ul class="meetup-info">
     <li>
       <UiIcon icon="user" class="meetup-info__icon" />
-      {{ organizer }}
+      {{ props.organizer }}
     </li>
     <li>
       <UiIcon icon="map" class="meetup-info__icon" />
-      {{ place }}
+      {{ props.place }}
     </li>
     <li>
       <UiIcon icon="cal-lg" class="meetup-info__icon" />
