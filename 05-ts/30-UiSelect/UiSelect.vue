@@ -1,9 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts" generic="T extends string">
+interface Option {
+  text: string
+  value: T
+}
+
+const props = defineProps<{
+  options: readonly Option[]
+}>()
+
+defineModel<T>()
+</script>
 
 <template>
-  <select class="select">
-    <option value="value-1">One</option>
-    <option value="value-2">Two</option>
+  <select class="select" :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
+    <option v-for="option in options" :key="option.value" :value="option.value">
+      {{ option.text }}
+    </option>
   </select>
 </template>
 

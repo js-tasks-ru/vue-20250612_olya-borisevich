@@ -1,13 +1,45 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { VNode } from 'vue'
+
+const props = defineProps<{
+  for?: string
+  label?: string
+  description?: string
+  hint?: string
+  showHint?: boolean
+  invalid?: boolean
+}>()
+
+defineSlots<{
+  label?: () => VNode[]
+  description?: () => VNode[]
+  default?: () => VNode[]
+}>()
+
+const shouldShowHint = props.hint !== undefined && (props.showHint || props.invalid)
+</script>
 
 <template>
   <div class="form-group">
-    <div class="form-group__label-wrapper">
-      <label for="FOR" class="form-group__label">LABEL</label>
-      <div class="form-group__description">DESCRIPTION</div>
+    <div class="form-group__label-wrapper" v-if="props.label || $slots.label || props.description || $slots.description">
+      <label v-if="props.label || $slots.label" :for="props.for" class="form-group__label">
+        <slot name="label">{{ props.label }}</slot>
+      </label>
+      <div v-if="props.description || $slots.description" class="form-group__description">
+        <slot name="description">{{ props.description }}</slot>
+      </div>
     </div>
-    <div class="form-group__control">CONTENT</div>
-    <div class="form-group__hint form-group__hint--invalid">HINT | ERROR</div>
+
+    <div class="form-group__control">
+      <slot />
+    </div>
+
+    <div v-if="props.hint !== undefined"
+         :class="['form-group__hint', { 'form-group__hint--invalid': props.invalid }]"
+         aria-live="polite"
+    >
+      {{ shouldShowHint ? props.hint : '' }}
+    </div>
   </div>
 </template>
 
